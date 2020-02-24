@@ -1,0 +1,13 @@
+{
+    "sqltools.connections": [
+        {
+            "database": "osm",
+            "dialect": "PostgreSQL",
+            "name": "pg",
+            "password": "postgres",
+            "port": 5432,
+            "server": "localhost",
+            "username": "postgres"
+        }
+    ]
+}
