@@ -16,7 +16,7 @@ CREATE INDEX buildings_geom_idx ON public.buildings USING gist (geom) TABLESPACE
 --Defects
 CREATE TABLE defects(
    id SERIAL PRIMARY KEY,
-   building_id INT references buildings(id),
+   building_id INT references buildings(id)  ON UPDATE cascade ON DELETE cascade,
    type VARCHAR(25) NOT NULL,
    geom geometry(Point,4326),
    created_by VARCHAR(25) NOT NULL,
@@ -26,8 +26,6 @@ CREATE TABLE defects(
 )
 
 CREATE INDEX defects_geom_idx ON public.defects USING gist (geom) TABLESPACE pg_default;
-	
-	
 	
 	
 --Last edit trigger	

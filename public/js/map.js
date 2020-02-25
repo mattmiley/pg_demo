@@ -1,5 +1,5 @@
 
-getBuilding = async () => {
+getBuildings = async () => {
     try {
         const response = await fetch("/buildings");
         const result = await response.json();
@@ -13,8 +13,24 @@ getBuilding = async () => {
                 points.push([Number(latlon.split(" ")[1]), Number(latlon.split(" ")[0])])
             });
 
-            var polygon = L.polygon(points).addTo(mymap);
+            L.polygon(points).addTo(mymap);
 
+        });
+    } catch (err) {
+        alert(err);
+    }
+};
+
+getDefects = async () => {
+    try {
+        const response = await fetch("/defects");
+        const result = await response.json();
+        result.forEach(function (element) {
+
+            //"POINT(-81.6943286353165 41.5051124769817)"            
+            var pntString = element.geom.replace("POINT(", "").replace(")", "");
+            var pnt = pntString.split(" ");
+            L.marker([pnt[1], pnt[0]]).addTo(mymap);
         });
     } catch (err) {
         alert(err);
@@ -35,13 +51,20 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 }).addTo(mymap);
 
 
-getBuilding();
+getBuildings();
+getDefects();
 
-
-var popup = L.popup();
+clearLayers = () => {
+    mymap.eachLayer(function (layer) {
+        if (layer.options.id != 'mapbox/streets-v11') {
+            mymap.removeLayer(layer);
+        }
+    });    
+}
 
 onMapClick = async (e) => {
     try {
+        
         var pnt = {
             name: 'Hole',
             lon: e.latlng.lng,
@@ -64,6 +87,10 @@ onMapClick = async (e) => {
         const result = await response.json();
 
         alert(result);
+
+        clearLayers();
+        getBuildings();
+        getDefects();
 
     } catch (err) {
         alert(err);
